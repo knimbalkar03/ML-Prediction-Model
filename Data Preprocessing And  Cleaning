@@ -1,0 +1,198 @@
+#Importing The Dataset
+data=pd.read_csv(r"C:\Users\ADMIN\Downloads/household_power.csv")
+data
+Date	Time	Global_active_power	Global_reactive_power	Voltage	Global_intensity	Sub_metering_1	Sub_metering_2	Sub_metering_3
+0	3/11/2010	20:52:00	1.47	0.16	241.73	6	0	1	1.0
+1	27/11/2008	16:00:00	0.662	0	241.48	3.4	0	0	0.0
+2	29/6/2010	17:27:00	0.752	0.32	240.04	3.4	0	1	0.0
+3	6/5/2007	1:46:00	0.15	0	237.86	0.6	0	0	0.0
+4	5/3/2008	12:14:00	0.218	0	243.24	0.8	0	0	0.0
+...	...	...	...	...	...	...	...	...	...
+20748	30/7/2009	19:56:00	0.546	0.064	243.09	2.4	0	2	0.0
+20749	10/6/2007	23:10:00	0.624	0.128	242.82	2.6	0	0	0.0
+20750	21/2/2010	16:24:00	1.832	0.312	240.69	7.6	0	2	19.0
+20751	14/10/2007	22:20:00	1.52	0.092	239.54	6.4	0	1	0.0
+20752	20/9/2008	5:28:00	1.928	0.222	240.39	8	0	0	28.0
+20753 rows × 9 columns
+
+​
+data.shape
+(20753, 10)
+data.columns
+Index(['Unnamed: 0', 'Date', 'Time', 'Global_active_power',
+       'Global_reactive_power', 'Voltage', 'Global_intensity',
+       'Sub_metering_1', 'Sub_metering_2', 'Sub_metering_3'],
+      dtype='object')
+data.describe(include = 'all')
+Date	Time	Global_active_power	Global_reactive_power	Voltage	Global_intensity	Sub_metering_1	Sub_metering_2	Sub_metering_3
+count	20753	20753	20753	20753	20753	20753	20753	20753	20497.000000
+unique	1442	1440	2544	440	2212	230	70	76	NaN
+top	22/4/2010	12:22:00	?	0.000	?	1.000	0.000	0.000	NaN
+freq	32	29	256	4802	256	1722	18368	14062	NaN
+mean	NaN	NaN	NaN	NaN	NaN	NaN	NaN	NaN	6.422111
+std	NaN	NaN	NaN	NaN	NaN	NaN	NaN	NaN	8.426103
+min	NaN	NaN	NaN	NaN	NaN	NaN	NaN	NaN	0.000000
+25%	NaN	NaN	NaN	NaN	NaN	NaN	NaN	NaN	0.000000
+50%	NaN	NaN	NaN	NaN	NaN	NaN	NaN	NaN	1.000000
+75%	NaN	NaN	NaN	NaN	NaN	NaN	NaN	NaN	17.000000
+max	NaN	NaN	NaN	NaN	NaN	NaN	NaN	NaN	31.000000
+data.info()
+​
+<class 'pandas.core.frame.DataFrame'>
+Int64Index: 20753 entries, 2042128 to 926644
+Data columns (total 9 columns):
+ #   Column                 Non-Null Count  Dtype  
+---  ------                 --------------  -----  
+ 0   Date                   20753 non-null  object 
+ 1   Time                   20753 non-null  object 
+ 2   Global_active_power    20753 non-null  object 
+ 3   Global_reactive_power  20753 non-null  object 
+ 4   Voltage                20753 non-null  object 
+ 5   Global_intensity       20753 non-null  object 
+ 6   Sub_metering_1         20753 non-null  object 
+ 7   Sub_metering_2         20753 non-null  object 
+ 8   Sub_metering_3         20497 non-null  float64
+dtypes: float64(1), object(8)
+memory usage: 1.6+ MB
+data['Date'] = pd.to_datetime(data['Date'])
+data['Time'] = pd.to_datetime(data['Time'], format = '%H:%M:%S').dt.time
+data = data.replace('?',np.nan)
+data['Global_active_power'] = data['Global_active_power'].astype('float')
+data['Global_active_power'].dtypes
+dtype('float64')
+data['Global_reactive_power'] = data['Global_reactive_power'].astype('float')
+data['Global_reactive_power'].dtypes
+     
+dtype('float64')
+data['Voltage'] = data['Voltage'].astype('float')
+data['Voltage'].dtypes
+dtype('float64')
+data['Global_intensity'] = data['Global_intensity'].astype('float')
+data['Global_intensity'].dtypes
+dtype('float64')
+data['Sub_metering_1'] = data['Sub_metering_1'].astype('float')
+data['Sub_metering_1'].dtypes
+dtype('float64')
+data['Sub_metering_2'] = data['Sub_metering_2'].astype('float')
+data['Sub_metering_2'].dtypes
+dtype('float64')
+data.head()
+     
+Unnamed: 0	Date	Time	Global_active_power	Global_reactive_power	Voltage	Global_intensity	Sub_metering_1	Sub_metering_2	Sub_metering_3
+0	2042128	3/11/2010	20:52:00	1.47	0.16	241.73	6.0	0.0	1.0	1.0
+1	1025196	27/11/2008	16:00:00	0.662	0.000	241.480	3.400	0.000	0.000	0.0
+2	1859043	29/6/2010	17:27:00	0.752	0.320	240.040	3.400	0.000	1.000	0.0
+3	202102	6/5/2007	01:46:00	0.150	0.000	237.860	0.600	0.000	0.000	0.0
+4	640490	5/3/2008	12:14:00	0.218	0.000	243.240	0.800	0.000	0.000	0.0
+​
+data.info()
+<class 'pandas.core.frame.DataFrame'>
+Int64Index: 20753 entries, 2042128 to 926644
+Data columns (total 9 columns):
+ #   Column                 Non-Null Count  Dtype         
+---  ------                 --------------  -----         
+ 0   Date                   20753 non-null  datetime64[ns]
+ 1   Time                   20753 non-null  object        
+ 2   Global_active_power    20497 non-null  float64       
+ 3   Global_reactive_power  20497 non-null  float64       
+ 4   Voltage                20497 non-null  float64       
+ 5   Global_intensity       20497 non-null  float64       
+ 6   Sub_metering_1         20497 non-null  float64       
+ 7   Sub_metering_2         20497 non-null  float64       
+ 8   Sub_metering_3         20497 non-null  float64       
+dtypes: datetime64[ns](1), float64(7), object(1)
+memory usage: 1.6+ MB
+data['Month'] = pd.to_datetime(data['Date'], format='%m').dt.month_name().str.slice(stop=3)
+data['Year'] = data['Date'].dt.year
+data['Year'] = data['Year'].astype('str')
+data['Hour'] = pd.to_datetime(data['Time'], format = '%H:%M:%S').dt.hour.astype('str')
+data['Total_metering'] = data['Sub_metering_1'] + data['Sub_metering_3'] + data['Sub_metering_2']
+data.isna().sum()
+Date                       0
+Time                       0
+Global_active_power      256
+Global_reactive_power    256
+Voltage                  256
+Global_intensity         256
+Sub_metering_1           256
+Sub_metering_2           256
+Sub_metering_3           256
+Month                      0
+Year                       0
+Hour                       0
+Total_metering           256
+dtype: int64
+data.duplicated().sum()
+data = data.drop_duplicates()
+     
+numerical_feature = [col for col in data.columns if data[col].dtypes == 'float64']
+categorical_feature = [col for col in data.columns if data[col].dtypes == 'O']
+print(f"Numerical Columns are: {numerical_feature}")
+print(f"Categorical Columns are: {categorical_feature}")
+data['Global_active_power'].dtypes
+     
+Numerical Columns are: ['Global_active_power', 'Global_reactive_power', 'Voltage', 'Global_intensity', 'Sub_metering_1', 'Sub_metering_2', 'Sub_metering_3', 'Total_metering']
+Categorical Columns are: ['Time', 'Month', 'Year', 'Hour']
+dtype('float64')
+for col in categorical_feature:
+    print(data[col].value_counts(normalize = True) * 100)
+    print('----'*10)
+12:22:00    0.139739
+09:55:00    0.130102
+15:18:00    0.130102
+03:36:00    0.125283
+07:43:00    0.125283
+              ...   
+09:24:00    0.024093
+07:44:00    0.024093
+16:21:00    0.019274
+04:41:00    0.019274
+21:40:00    0.019274
+Name: Time, Length: 1440, dtype: float64
+----------------------------------------
+May    8.880644
+Jul    8.581892
+Jan    8.557799
+Oct    8.495157
+Jun    8.393967
+Feb    8.360237 
+Mar    8.350600
+Aug    8.307233
+Dec    8.095215
+Apr    8.075941
+Sep    8.061485
+Nov    7.839830
+Name: Month, dtype: float64
+----------------------------------------
+2008    25.803498
+2007    25.186720
+2009    25.032525
+2010    22.970173
+2006     1.007083
+Name: Year, dtype: float64
+----------------------------------------
+8     4.389727
+0     4.331904
+9     4.322267
+14    4.317448
+10    4.302992
+19    4.278899
+3     4.254807
+21    4.235532
+15    4.221076
+7     4.172891
+11    4.153616
+1     4.148798
+2     4.148798
+22    4.139161
+23    4.110249
+18    4.105431
+17    4.105431
+5     4.081338
+4     4.057245
+6     4.057245
+12    4.057245
+16    4.033152
+13    4.018696
+20    3.956055
+Name: Hour, dtype: float64
