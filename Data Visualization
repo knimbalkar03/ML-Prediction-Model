@@ -1,0 +1,129 @@
+plt.figure(figsize=(10, 10))
+plt.suptitle('Univariate Analysis of Numerical Features', fontsize=20, fontweight='bold', alpha=0.8, y=1.)
+# 1:34 min req
+for i in range(0, len(numerical_feature)):
+    plt.subplot(5, 3, i+1)
+    sns.kdeplot(x=data[numerical_feature[i]],shade=True, color='r')
+    plt.xlabel(numerical_feature[i])
+    plt.tight_layout()
+    # categorical columns
+plt.figure(figsize=(20, 15))
+plt.suptitle('Univariate Analysis of Categorical Features', fontsize=20, fontweight='bold', alpha=0.8, y=1.)
+category = [ 'Type', 'Content Rating']
+for i in range(0, len(categorical_feature)):
+    if len(data[categorical_feature[i]].unique()) < 25:        
+        plt.subplot(2, 2, i+1)
+        sns.countplot(x=data[categorical_feature[i]],palette="Set2")
+        plt.xlabel(categorical_feature[i], size = 20)
+        plt.ylabel('count',size = 20)
+        plt.xticks(rotation=45, size = 20)
+        plt.yticks(rotation=45, size = 20)
+        plt.tight_layout() 
+    else:
+        continue
+        plt.figure(figsize = (15,15))
+for i in range(len(numerical_feature)):
+    plt.subplot(3,4,i+1)
+    sns.scatterplot(data = data, x = data['Total_metering'], y = data[numerical_feature[i]])
+    plt.ylabel(numerical_feature[i], size = 20)
+    plt.xlabel('Total_metering', size = 20)
+    plt.tight_layout()
+plt.suptitle('Relation of numerical feature with Total metering',  fontsize = 20 )
+    
+# In numerical column
+plt.figure(figsize = (15,10))
+matrix = np.triu(data.corr())
+sns.heatmap(data.corr(),linewidths=.2 ,annot=True, mask = matrix)
+plt.yticks(rotation=45, size = 10)
+plt.xticks(rotation=45, size = 10)
+plt.show()
+data_month = data.groupby(by = ['Month']).sum().reset_index()
+data_month = data_month.sort_values(by = ['Total_metering'],ascending = False).reset_index(drop = True)
+sns.barplot(x = data_month['Month'], y = data_month['Total_metering'])
+plt.suptitle('Month with energy consumption in decending order');
+
+plt.figure(figsize = (15,10))
+for i in range(len(numerical_feature)):
+    plt.subplot(4,3,i+1)
+    sns.scatterplot(data = data, x = data['Total_metering'], y = data[numerical_feature[i]])
+    plt.ylabel(numerical_feature[i], size = 20)
+    plt.xlabel('Total_metering', size = 20)
+    plt.tight_layout()
+plt.suptitle('Relation of numerical feature with Total metering',  fontsize = 20 );
+data_hour = data.groupby(by = ['Hour']).sum().reset_index()
+data_hour['Hour'] = data_hour['Hour'].astype('int')
+data_hour = data_hour.sort_values(by = ['Hour'],ascending = True).reset_index(drop = True)
+data_hour['Hour'] = data_hour['Hour'].astype('str')
+plt.figure(figsize = (15,10))
+sns.lineplot(data= data_hour, y= data_hour['Total_metering'],x = data_hour['Hour'] , label = 'Total_metering')
+sns.lineplot(data= data_hour, y= data_hour['Sub_metering_1'],x = data_hour['Hour'] , label = 'Sub_metering_1', color = 'green')
+sns.lineplot(data= data_hour, y= data_hour['Sub_metering_2'],x = data_hour['Hour'] , label = 'Sub_metering_2', color = 'blue')
+sns.lineplot(data= data_hour, y= data_hour['Sub_metering_3'],x = data_hour['Hour'] , label = 'Sub_metering_3', color = 'orange')
+plt.xticks(size = 15)
+plt.yticks(size = 15)
+plt.legend(loc = 'upper left')
+plt.show()
+def mnt(x):
+    months = {
+        'jan': 1,
+        'feb': 2,
+        'mar': 3,
+        'apr':4,
+        'may':5,
+        'jun':6,
+        'jul':7,
+        'aug':8,
+        'sep':9,
+        'oct':10,
+        'nov':11,
+        'dec':12
+        }
+    a = x.strip()[:3].lower()
+    ez = months[a]
+    return ez
+
+data_month_year = data.groupby(by = ['Year', 'Month']).sum().reset_index()
+data_month_year['Month_num'] = data_month_year['Month'].apply(mnt) 
+data_month_year = data_month_year.sort_values(by = ['Year', 'Month_num']).reset_index(drop = True)
+data_month_year['Month_year'] =  data_month_year['Month']+  ' ' + data_month_year['Year'].astype('str')
+plt.figure(figsize = (15,8))
+sns.lineplot(data= data_month_year, y= data_month_year['Total_metering'],x = data_month_year['Month_year'] , label = 'Total_metering')
+sns.lineplot(data= data_month_year, y= data_month_year['Sub_metering_1'],x = data_month_year['Month_year'] , label = 'Sub_metering_1', color = 'green')
+sns.lineplot(data= data_month_year, y= data_month_year['Sub_metering_2'],x = data_month_year['Month_year'] , label = 'Sub_metering_2', color = 'blue')
+sns.lineplot(data= data_month_year, y= data_month_year['Sub_metering_3'],x = data_month_year['Month_year'] , label = 'Sub_metering_3', color = 'orange')
+plt.xticks(size = 10, rotation = 45)
+plt.yticks(size = 10)
+plt.legend(loc = 'upper left')
+plt.show()
+data_year = data.groupby(by = ['Year']).sum().reset_index()
+plt.figure(figsize = (10,7))
+sns.lineplot(data= data_year, y= data_year['Total_metering'],x = data_year['Year'] , label = 'Total_metering')
+sns.lineplot(data= data_year, y= data_year['Sub_metering_1'],x = data_year['Year'] , label = 'Sub_metering_1', color = 'green')
+sns.lineplot(data= data_year, y= data_year['Sub_metering_2'],x = data_year['Year'] , label = 'Sub_metering_2', color = 'blue')
+sns.lineplot(data= data_year, y= data_year['Sub_metering_3'],x = data_year['Year'] , label = 'Sub_metering_3', color = 'orange')
+plt.xticks(size = 10, rotation = 45)
+plt.yticks(size = 10)
+plt.legend(loc = 'upper left')
+plt.show()
+plt.figure(figsize = (8,20))
+j = 1
+for i in ['Total_metering', 'Global_active_power' , 'Global_reactive_power']:
+    plt.subplot(3,1,j)
+    sns.lineplot(data = data_hour, x = 'Hour', y = i)
+    plt.ylabel(i, size = 20)
+    plt.xlabel('Hour', size = 20)
+    plt.xticks(rotation = 45, size = 15 )
+    plt.yticks( size = 15 )
+    plt.tight_layout()
+    j = j+1
+plt.suptitle('Variation of active power, reactive power and electricity bill through out a day (Accumulated)',  fontsize = 20 );
+
+plt.show()
+     plt.figure(figsize = (15,10))
+j = 1
+for i in range(len(data.columns)):
+    if (data_new[data_new.columns[i]].dtypes == 'float64' or data_new[data_new.columns[i]].dtypes == 'int'):
+        plt.subplot(4,3,j)
+        sns.boxplot(data_new[data_new.columns[i]])
+        plt.tight_layout()
+        j = j+1
