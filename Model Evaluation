@@ -1,0 +1,66 @@
+score_lr = r2_score(y_test, y_pred_lr)
+score_ridge = r2_score(y_test, y_pred_ridge)
+score_lasso = r2_score(y_test, y_pred_lasso)
+score_elastic = r2_score(y_test, y_pred_elastic)
+score_SVR = r2_score(y_test, y_pred_SVR)
+
+
+
+print('R2 score Linear Regression Model', end = ' ')
+print(score_lr)
+print('R2 score Ridge Model', end = ' ')
+print(score_ridge)
+print('R2 score Lasso Model', end = ' ')
+print(score_lasso)
+print('R2 score Elastic Net Model', end = ' ')
+print(score_elastic)
+print('R2 score raw SVR Model', end = ' ')
+print(score_SVR)
+
+R2 score Linear Regression Model 0.7245853633907318
+R2 score Ridge Model 0.7246311831996904
+R2 score Lasso Model 0.708607235812839
+R2 score Elastic Net Model 0.671471682082907
+R2 score raw SVR Model 0.751882738711126
+
+
+print('Adjusted r2 score Linear model', end = ' ')
+print(1 - (1-score_lr)*(len(y_test)-1)/(len(y_test)-x_test.shape[1]-1))
+print('Adjusted r2 score Ridge', end = ' ')
+print(1 - (1-score_ridge)*(len(y_test)-1)/(len(y_test)-x_test.shape[1]-1))
+print('Adjusted r2 score Lasso', end = ' ')
+print(1 - (1-score_lasso)*(len(y_test)-1)/(len(y_test)-x_test.shape[1]-1))
+print('Adjusted r2 score Elastic', end = ' ')
+print(1 - (1-score_elastic)*(len(y_test)-1)/(len(y_test)-x_test.shape[1]-1))
+print('Adjusted R2 score raw SVR Model', end = ' ')
+print(1 - (1-score_SVR)*(len(y_test)-1)/(len(y_test)-x_test.shape[1]-1))
+
+
+Adjusted r2 score Linear model 0.7243408401856924
+Adjusted r2 score Ridge 0.7243867006751563
+Adjusted r2 score Lasso 0.7083485266407286
+Adjusted r2 score Elastic 0.6711800026056205
+Adjusted R2 score raw SVR Model 0.751662451116019
+
+
+
+models=['Linear Regression Model','Ridge Model','Lasso Model','Elastic Net Model','SVR Model']
+accuracy=[score_lr,score_ridge,score_lasso,score_elastic,score_SVR]
+
+fig, ax = plt.subplots(figsize=(8, 6))
+
+# Add the data to the plot
+ax.plot(models, accuracy, marker='o', markersize=8, linewidth=2)
+
+# Set the plot title, axis labels, and tick labels
+ax.set_title('Accuracy Comparison of Different Models')
+ax.set_xlabel('Models')
+ax.set_ylabel('Accuracy')
+ax.set_xticklabels(models, rotation=45, ha='right')
+
+# Display the plot
+plt.show()
+
+
+
+
